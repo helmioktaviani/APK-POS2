@@ -10,10 +10,8 @@ use App\Http\Controllers\UserController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'login'])->name('login');
-    // Sudah diubah dari loginProcess menjadi authenticate agar sesuai dengan isi AuthController
     Route::post('/auth', [AuthController::class, 'authenticate'])->name('auth');
 });
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -36,4 +34,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('/penjualan', PenjualanController::class);
         Route::resource('/itempenjualan', ItemPenjualanController::class);
     });
+});
+
+// KODE BARU DITEMPEL DI SINI (BARIS PALING BAWAH SENDIRI)
+Route::get('/buat-link-storage', function () {
+    \Illuminate\Support\Facades\Artisan::call('storage:link');
+    return 'Link Storage Berhasil Dibuat!';
 });

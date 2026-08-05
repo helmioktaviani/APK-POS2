@@ -4,9 +4,9 @@
     <label class="form-label">Nama</label>
     <input type="text" name="name"
             class="form-control @error('name') is-invalid @enderror"
-            value="{{ old('name', $user->name  ?? '')  }}">
+            value="{{ old('name', $user->name ?? '') }}">
 @error('name')
-    <div class="invalied-feedback">
+    <div class="invalid-feedback">
         {{ $message }}
     </div>
 @enderror        
@@ -16,9 +16,9 @@
     <label class="form-label">Email</label>
     <input type="email" name="email"
             class="form-control @error('email') is-invalid @enderror"
-            value="{{ old('email', $user->email  ?? '')  }}">
+            value="{{ old('email', $user->email ?? '') }}">
 @error('email')
-    <div class="invalied-feedback">
+    <div class="invalid-feedback">
         {{ $message }}
     </div>
 @enderror        
@@ -29,7 +29,7 @@
     <input type="password" name="password"
             class="form-control @error('password') is-invalid @enderror">
 @error('password')
-    <div class="invalied-feedback">
+    <div class="invalid-feedback">
         {{ $message }}
     </div>
 @enderror
@@ -43,16 +43,16 @@
         @foreach($roles as $role)
             <option value="{{ $role->id }}"
                 @selected(old('role_id', $user->role_id ?? '') == $role->id)>
-                {{ uncfirst($role->name) }}
+                {{ ucfirst($role->name) }}
             </option>
         @endforeach
-</select>
+    </select>
 @error('role_id')
-    <div class="invalied-feedback">
+    <div class="invalid-feedback">
         {{ $message }}
     </div>
 @enderror
 </div>
 
-<button class="btn btn-success">Simpan</button>
+<button type="submit" class="btn btn-success">Simpan</button>
 <a href="{{ route('admin.users') }}" class="btn btn-secondary">Kembali</a>

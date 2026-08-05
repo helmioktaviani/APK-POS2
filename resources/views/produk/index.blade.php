@@ -4,19 +4,18 @@
 
 @section('content')
 
-@include('layouts.navbar')
-
 <h1>Halaman Produk</h1>
 
 @can('create', App\Models\Produk::class)
-<a href="{{ route('produk.create') }}" method="GET" class="btn btn-primary mb-3">create</a>
+<a href="{{ route('produk.create') }}" class="btn btn-primary mb-3">Create</a>
 @endcan
+
 <form action="{{ route('produk.index') }}" method="GET" class="mb-3">
     <div class="input-group">
         <input
             type="text"
             name="search"
-            value=""
+            value="{{ request('search') }}"
             class="form-control"
             placeholder="Search nama produk"
         >
@@ -28,56 +27,57 @@
 
 <table class="table">
     <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">user</th>
-        <th scope="col">foto</th>
-        <th scope="col">nama</th>
-        <th scope="col">harga beli</th>
-        <th scope="col">harga jual</th>
-        <th scope="col">stok</th>
-        <th scope="col">aksi</th>
-    </tr>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">User</th>
+            <th scope="col">Foto</th>
+            <th scope="col">Nama</th>
+            <th scope="col">Harga Beli</th>
+            <th scope="col">Harga Jual</th>
+            <th scope="col">Stok</th>
+            <th scope="col">Aksi</th>
+        </tr>
     </thead>
     <tbody>
-        @forelse ($products as $product)
-    <tr>
-    <th scope="row">{{ $products->firstItem() + $loop->index }}</th>
-        <td>{{ $product->user->name }}</td>
-        <td>
-            <img src="{{ asset('storage/'.$product->foto) }}"
-                    width="10"
-                    class="img-thumbnail">
-        </td>
-        <td>{{ $product->nama }}</td>
-        <td>{{ $product->harga_beli }}</td>
-        <td>{{ $product->harga_jual }}</td>
-        <td>{{ $product->stok }}</td>
-        <td class="d-flex gap-1">
-        @can('update', $product)
-        <a href="{{ route('produk.edit', $product) }}" class="btn btn-warning">Edit</a>
-        @endcan
-        ||
-        @can('delete', $product)
-        <form action="{{ route('produk.destroy', $product) }}" method="POST" class="d-inline">
-            @csrf
-            @method('DELETE')
-            <button class="btn btn-danger" onclick="return confirm('Apakah anda yakin akan menghapus user ini?')">
-                Hapus
-            </button>
-        </form>
-        @endcan
-    </td>
-</tr>
-    @empty
-<tr>
-    <td colspan="8"><h1>Data tidak tersedia.</h1></td>
-</tr>
-@endforelse
-
+        @forelse ($produk as $product)
+        <tr>
+            <th scope="row">{{ $produk->firstItem() + $loop->index }}</th>
+            <td>{{ $product->user->name ?? 'Tidak ada user' }}</td>
+            <td>
+                @if($product->foto)
+                    <img src="{{ asset('storage/'.$product->foto) }}" width="50" class="img-thumbnail">
+                @else
+                    <span class="text-muted">No Photo</span>
+                @endif
+            </td>
+            <td>{{ $product->nama }}</td>
+            <td>Rp {{ number_format($product->harga_beli) }}</td>
+            <td>Rp {{ number_format($product->harga_jual) }}</td>
+            <td>{{ $product->stok }}</td>
+            <td class="d-flex gap-1">
+                @can('update', $product)
+                <a href="{{ route('produk.edit', $product) }}" class="btn btn-sm btn-warning">Edit</a>
+                @endcan
+                
+                @can('delete', $product)
+                <form action="{{ route('produk.destroy', $product) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-sm btn-danger" onclick="return confirm('Apakah anda yakin akan menghapus produk ini?')">
+                        Hapus
+                    </button>
+                </form>
+                @endcan
+            </td>
+        </tr>
+        @empty
+        <tr>
+            <td colspan="8" class="text-center text-muted py-4">Data tidak tersedia.</td>
+        </tr>
+        @endforelse
     </tbody>
 </table>
 
-{{ $products->links() }}
+{{ $produk->links() }}
 
 @endsection

@@ -3,7 +3,7 @@
 @if (!empty($produk->foto))
     <div class="mb-2">
         <label>Foto Saat Ini</label><br>
-        <img src="{{ asset('storage/' . $produk->foto) }}"
+        <img src="{{ asset('storage/' . $products->foto) }}"
                 width="150"
                 class="img-thumbnail">
     </div>

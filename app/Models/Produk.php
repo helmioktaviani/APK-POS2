@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-
-
 class Produk extends Model
 {
     use HasFactory;
@@ -20,12 +18,12 @@ class Produk extends Model
         'harga_beli',
         'harga_jual',
         'stok'
-
     ];
 
+    // Relasi sudah diganti menjadi belongsTo agar Laravel membaca kolom dengan benar
     public function user()
     {
-        return $this->hasMany(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function itemPenjualan()

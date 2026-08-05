@@ -1,30 +1,106 @@
 <?php
 
-namespace App\Models;
+namespace App\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Produk;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
-class Produk extends Model
+class ProdukController extends Controller
 {
-    use HasFactory;
-
-    protected $table = 'produk';
-    
-    protected $fillable = [
-        'user_id',
-        'foto',
-        'nama',
-        'harga_beli',
-        'harga_jual',
-        'stok',
-    ];
-    public function user()
+    /**
+     * Menampilkan daftar produk.
+     */
+    public function index()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        // Mengambil data produk beserta relasi user yang membuatnya (di-paginate 10 data per halaman)
+        $produk = Produk::with('user')->latest()->paginate(10);
+        
+        // Mengarahkan ke file view produk/index.blade.php
+        return view('produk.index', compact('produk'));
     }
-    public function ItemPenjualan()
+
+    /**
+     * Menampilkan form tambah produk baru.
+     */
+    public function create()
     {
-        return $this->hasMany(ItemPenjualan::class, 'produk_id');
+        return view('produk.create');
+    }
+
+    /**
+     * Menyimpan data produk baru ke database.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'harga_beli' => 'required|numeric',
+            'harga_jual' => 'required|numeric',
+            'stok' => 'required|integer',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,jfif,webp|max:2048', // TAMBAH JFIF & WEBP
+        ]);
+
+        $data = $request->all();
+        $data['user_id'] = auth()->id(); // Otomatis mengisi user_id dari admin/kasir yang sedang login
+
+        if ($request->hasFile('foto')) {
+            $data['foto'] = $request->file('foto')->store('produk', 'public');
+        }
+
+        Produk::create($data);
+
+        return redirect()->route('produk.index')->with('success', 'Produk berhasil ditambahkan.');
+    }
+
+    /**
+     * Menampilkan form edit produk.
+     */
+    public function edit(Produk $produk)
+    {
+        return view('produk.edit', compact('produk'));
+    }
+
+    /**
+     * Memperbarui data produk di database.
+     */
+    public function update(Request $request, Produk $produk)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'harga_beli' => 'required|numeric',
+            'harga_jual' => 'required|numeric',
+            'stok' => 'required|integer',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,jfif,webp|max:2048', // TAMBAH JFIF & WEBP
+        ]);
+
+        $data = $request->all();
+
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama dari storage jika ada agar tidak merusak path baru
+            if ($produk->foto && Storage::disk('public')->exists($produk->foto)) {
+                Storage::disk('public')->delete($produk->foto);
+            }
+            $data['foto'] = $request->file('foto')->store('produk', 'public');
+        }
+
+        $produk->update($data);
+
+        return redirect()->route('produk.index')->with('success', 'Produk berhasil diperbarui.');
+    }
+
+    /**
+     * Menghapus produk dari database.
+     */
+    public function destroy(Produk $produk)
+    {
+        // Hapus foto dari storage saat produk dihapus
+        if ($produk->foto && Storage::disk('public')->exists($produk->foto)) {
+            Storage::disk('public')->delete($produk->foto);
+        }
+
+        $produk->delete();
+
+        return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
     }
 }
