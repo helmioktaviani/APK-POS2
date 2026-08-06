@@ -14,7 +14,7 @@ class PenjualanController extends Controller
     {
         // Mengambil data penjualan terbaru beserta kasir/user yang bertransaksi
         $penjualan = Penjualan::with('user')->latest()->paginate(10);
-        
+
         // Mengarahkan ke halaman resources/views/penjualan/index.blade.php
         return view('penjualan.index', compact('penjualan'));
     }
@@ -49,11 +49,24 @@ class PenjualanController extends Controller
     }
 
     /**
+     * Menampilkan detail data transaksi.
+     */
+    public function show($id)
+    {
+        // Mengambil data transaksi beserta kasir dan daftar produk yang dibeli
+        $penjualan = Penjualan::with(['user', 'itemPenjualan.produk'])->findOrFail($id);
+
+        // Mengarahkan ke halaman detail transaksi (show.blade.php)
+        return view('penjualan.show', compact('penjualan'));
+    }
+
+    /**
      * Menghapus data transaksi.
      */
     public function destroy(Penjualan $penjualan)
     {
         $penjualan->delete();
+
         return redirect()->route('penjualan.index')->with('success', 'Transaksi berhasil dihapus.');
     }
 }

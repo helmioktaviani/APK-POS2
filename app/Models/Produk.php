@@ -10,7 +10,7 @@ class Produk extends Model
     use HasFactory;
 
     protected $table = 'produk';
-    
+
     protected $fillable = [
         'user_id',
         'foto',
@@ -20,7 +20,17 @@ class Produk extends Model
         'stok'
     ];
 
-    // Relasi sudah diganti menjadi belongsTo agar Laravel membaca kolom dengan benar
+    // TENTU KAN FITUR OTOMATIS SAAT PRODUK DIHAPUS
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($produk) {
+            // Otomatis menghapus semua data transaksi produk ini di tabel item_penjualan sebelum produknya hilang
+            $produk->itemPenjualan()->delete();
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
