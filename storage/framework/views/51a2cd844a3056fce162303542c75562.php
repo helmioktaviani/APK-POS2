@@ -1,8 +1,8 @@
-@extends('layouts.app')
 
-@section('title', 'Produk')
 
-@section('content')
+<?php $__env->startSection('title', 'Produk'); ?>
+
+<?php $__env->startSection('content'); ?>
 
 <style>
     h1 {
@@ -72,16 +72,16 @@
 
 <h1>Halaman Produk</h1>
 
-@can('create', App\Models\Produk::class)
-<a href="{{ route('produk.create') }}" class="btn btn-primary mb-3">Create</a>
-@endcan
+<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('create', App\Models\Produk::class)): ?>
+<a href="<?php echo e(route('produk.create')); ?>" class="btn btn-primary mb-3">Create</a>
+<?php endif; ?>
 
-<form action="{{ route('produk.index') }}" method="GET" class="mb-3">
+<form action="<?php echo e(route('produk.index')); ?>" method="GET" class="mb-3">
     <div class="input-group">
         <input
             type="text"
             name="search"
-            value="{{ request('search') }}"
+            value="<?php echo e(request('search')); ?>"
             class="form-control"
             placeholder="Search nama produk"
         >
@@ -105,45 +105,47 @@
         </tr>
     </thead>
     <tbody>
-        @forelse ($produk as $product)
+        <?php $__empty_1 = true; $__currentLoopData = $produk; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
         <tr>
-            <th scope="row">{{ $produk->firstItem() + $loop->index }}</th>
-            <td>{{ $product->user->name ?? 'Tidak ada user' }}</td>
+            <th scope="row"><?php echo e($produk->firstItem() + $loop->index); ?></th>
+            <td><?php echo e($product->user->name ?? 'Tidak ada user'); ?></td>
             <td>
-                @if($product->foto)
-                    <img src="{{ asset('storage/'.$product->foto) }}" width="50" class="img-thumbnail">
-                @else
+                <?php if($product->foto): ?>
+                    <img src="<?php echo e(asset('storage/'.$product->foto)); ?>" width="50" class="img-thumbnail">
+                <?php else: ?>
                     <span class="text-muted">No Photo</span>
-                @endif
+                <?php endif; ?>
             </td>
-            <td>{{ $product->nama }}</td>
-            <td>Rp {{ number_format($product->harga_beli) }}</td>
-            <td>Rp {{ number_format($product->harga_jual) }}</td>
-            <td>{{ $product->stok }}</td>
+            <td><?php echo e($product->nama); ?></td>
+            <td>Rp <?php echo e(number_format($product->harga_beli)); ?></td>
+            <td>Rp <?php echo e(number_format($product->harga_jual)); ?></td>
+            <td><?php echo e($product->stok); ?></td>
             <td class="d-flex gap-1">
-                @can('update', $product)
-                <a href="{{ route('produk.edit', $product) }}" class="btn btn-sm btn-warning">Edit</a>
-                @endcan
+                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('update', $product)): ?>
+                <a href="<?php echo e(route('produk.edit', $product)); ?>" class="btn btn-sm btn-warning">Edit</a>
+                <?php endif; ?>
 
-                @can('delete', $product)
-                <form action="{{ route('produk.destroy', $product) }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
+                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('delete', $product)): ?>
+                <form action="<?php echo e(route('produk.destroy', $product)); ?>" method="POST" class="d-inline">
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('DELETE'); ?>
                     <button class="btn btn-sm btn-danger" onclick="return confirm('Apakah anda yakin akan menghapus produk ini?')">
                         Hapus
                     </button>
                 </form>
-                @endcan
+                <?php endif; ?>
             </td>
         </tr>
-        @empty
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
         <tr>
             <td colspan="8" class="text-center text-muted py-4">Data tidak tersedia.</td>
         </tr>
-        @endforelse
+        <?php endif; ?>
     </tbody>
 </table>
 
-{{ $produk->links() }}
+<?php echo e($produk->links()); ?>
 
-@endsection
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\APK-POS2-1\resources\views/produk/index.blade.php ENDPATH**/ ?>

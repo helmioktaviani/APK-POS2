@@ -1,11 +1,11 @@
 <!-- memanggil file app.blade.php -->
-@extends('layouts.app')
+
 
 <!-- mengirimkan nilai ke title untuk ditampilkan -->
-@section('title', 'Dashboard')
+<?php $__env->startSection('title', 'Dashboard'); ?>
 
 <!-- batas awal isi konten -->
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <!-- GAYA TAMBAHAN MANDIRI UNTUK KOLOM DASHBOARD -->
 <style>
@@ -67,24 +67,24 @@
     <h1 style="margin-bottom: 25px; font-size: 28px;">
         Ringkasan Hari Ini
         <small class="text-muted" style="font-size: 1.5rem; font-weight: normal; color: #6c757d;">
-            ({{ $tanggalHariIni->translatedFormat('l, d F Y') }})
+            (<?php echo e($tanggalHariIni->translatedFormat('l, d F Y')); ?>)
         </small>
     </h1>
 
-    @can('viewAny', App\Models\User::class)
+    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('viewAny', App\Models\User::class)): ?>
     <!-- SEKTOR 1: TODAY'S SALES -->
     <h2>Today's Sales</h2>
     <div class="grid-2">
         <div class="grid-item">
             <div class="card-box">
                 <div class="card-title-text">Total Nilai Penjualan Hari Ini</div>
-                <h3 class="card-value">Rp {{ number_format($ringkasan['total_penjualan']) }}</h3>
+                <h3 class="card-value">Rp <?php echo e(number_format($ringkasan['total_penjualan'])); ?></h3>
             </div>
         </div>
         <div class="grid-item">
             <div class="card-box">
                 <div class="card-title-text">Jumlah Transaksi Hari Ini</div>
-                <h3 class="card-value">{{ $ringkasan['total_transaksi'] }}</h3>
+                <h3 class="card-value"><?php echo e($ringkasan['total_transaksi']); ?></h3>
             </div>
         </div>
     </div>
@@ -95,17 +95,17 @@
         <div class="grid-item">
             <div class="card-box">
                 <div class="card-title-text">Total pembayaran tunai</div>
-                <h3 class="card-value">Rp {{ number_format($ringkasan['total_cash']) }}</h3>
+                <h3 class="card-value">Rp <?php echo e(number_format($ringkasan['total_cash'])); ?></h3>
             </div>
         </div>
         <div class="grid-item">
             <div class="card-box">
                 <div class="card-title-text">Total pembayaran non-tunai</div>
-                <h3 class="card-value">Rp {{ number_format($ringkasan['total_non_tunai']) }}</h3>
+                <h3 class="card-value">Rp <?php echo e(number_format($ringkasan['total_non_tunai'])); ?></h3>
             </div>
         </div>
     </div>
-    @endcan
+    <?php endif; ?>
 
     <!-- SEKTOR 3: CRITICAL INVENTORY STATUS -->
     <h2>Critical Inventory Status</h2>
@@ -121,22 +121,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($produkStokRendah as $index => $produk)
+                    <?php $__empty_1 = true; $__currentLoopData = $produkStokRendah; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $produk): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr>
-                            <td>{{ $produkStokRendah->firstItem() + $index }}</td>
-                            <td>{{ $produk->nama }}</td>
-                            <td>{{ $produk->stok }}</td>
+                            <td><?php echo e($produkStokRendah->firstItem() + $index); ?></td>
+                            <td><?php echo e($produk->nama); ?></td>
+                            <td><?php echo e($produk->stok); ?></td>
                         </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
                             <td colspan="3" class="text-muted text-center" style="padding: 15px;">
                                 Seluruh produk berada dalam kondisi stok aman.
                             </td>
                         </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
-            {{ $produkStokRendah->links() }}
+            <?php echo e($produkStokRendah->links()); ?>
+
         </div>
 
         <div class="grid-item">
@@ -150,22 +151,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($produkStokHabis as $index => $produk)
+                    <?php $__empty_1 = true; $__currentLoopData = $produkStokHabis; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $produk): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr>
-                            <td>{{ $produkStokHabis->firstItem() + $index }}</td>
-                            <td>{{ $produk->nama }}</td>
-                            <td>{{ $produk->stok }}</td>
+                            <td><?php echo e($produkStokHabis->firstItem() + $index); ?></td>
+                            <td><?php echo e($produk->nama); ?></td>
+                            <td><?php echo e($produk->stok); ?></td>
                         </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
                             <td colspan="3" class="text-muted text-center" style="padding: 15px;">
                                 Seluruh produk berada dalam kondisi stok aman.
                             </td>
                         </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
-            {{ $produkStokHabis->links() }}
+            <?php echo e($produkStokHabis->links()); ?>
+
         </div>
     </div>
 
@@ -180,22 +182,23 @@
             </tr>
         </thead>
         <tbody>
-            @forelse ($produkTerlaris as $produk)
+            <?php $__empty_1 = true; $__currentLoopData = $produkTerlaris; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $produk): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                 <tr>
-                    <td>{{ $produk->nama }}</td>
-                    <td>{{ $produk->stok }}</td>
-                    <td>{{ $produk->total_terjual }}</td>
+                    <td><?php echo e($produk->nama); ?></td>
+                    <td><?php echo e($produk->stok); ?></td>
+                    <td><?php echo e($produk->total_terjual); ?></td>
                 </tr>
-            @empty
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <tr>
                     <td colspan="3" class="text-muted text-center" style="padding: 15px;">
                         Tidak ada data penjualan hari ini.
                     </td>
                 </tr>
-            @endforelse
+            <?php endif; ?>
         </tbody>
     </table>
 </div>
 
 <!-- batas Akhir isi konten -->
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\APK-POS2-1\resources\views/dashboard.blade.php ENDPATH**/ ?>

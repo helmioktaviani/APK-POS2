@@ -1,8 +1,8 @@
-@extends('layouts.app') 
+ 
 
-@section('title', 'Penjualan') 
+<?php $__env->startSection('title', 'Penjualan'); ?> 
 
-@section('content') 
+<?php $__env->startSection('content'); ?> 
 
 <style>
     h1 {
@@ -70,18 +70,18 @@
     }
 </style>
 
-@if(session('errors')) 
+<?php if(session('errors')): ?> 
 <div class="alert alert-danger"> 
-    {{ session('errors') }} 
+    <?php echo e(session('errors')); ?> 
 </div> 
-@endif 
+<?php endif; ?> 
 
 <h1>Daftar Transaksi Penjualan</h1> 
-<a href="{{ route('penjualan.create') }}" class="btn btn-primary mb-3">Create</a> 
+<a href="<?php echo e(route('penjualan.create')); ?>" class="btn btn-primary mb-3">Create</a> 
 
-<form action="{{ route('penjualan.index') }}" method="GET" class="mb-3"> 
+<form action="<?php echo e(route('penjualan.index')); ?>" method="GET" class="mb-3"> 
     <div class="input-group"> 
-        <input type="text" name="search" value="{{ request()->search }}" class="form-control" placeholder="Search penjualan"> 
+        <input type="text" name="search" value="<?php echo e(request()->search); ?>" class="form-control" placeholder="Search penjualan"> 
         <button class="btn btn-outline-secondary" type="submit"> Search </button> 
     </div> 
 </form> 
@@ -99,35 +99,36 @@
         </tr> 
     </thead> 
     <tbody> 
-        @forelse ($penjualan as $sale) 
+        <?php $__empty_1 = true; $__currentLoopData = $penjualan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sale): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?> 
         <tr> 
-            <th scope="row">{{ $penjualan->firstItem() + $loop->index }}</th> 
-            <td>{{ $sale->created_at->translatedFormat('d-m-Y H:i:s') }}</td> 
-            <td>{{ $sale->user->name ?? 'Sistem' }}</td> 
-            <td>Rp {{ number_format($sale->total_pembayaran) }}</td> 
-            <td>{{ $sale->metode_pembayaran }}</td> 
-            <td>{{ $sale->status }}</td> 
+            <th scope="row"><?php echo e($penjualan->firstItem() + $loop->index); ?></th> 
+            <td><?php echo e($sale->created_at->translatedFormat('d-m-Y H:i:s')); ?></td> 
+            <td><?php echo e($sale->user->name ?? 'Sistem'); ?></td> 
+            <td>Rp <?php echo e(number_format($sale->total_pembayaran)); ?></td> 
+            <td><?php echo e($sale->metode_pembayaran); ?></td> 
+            <td><?php echo e($sale->status); ?></td> 
             <td class="d-flex gap-1"> 
-                <a href="{{ route('penjualan.show', $sale) }}" class="btn btn-sm btn-primary">Detail</a> 
+                <a href="<?php echo e(route('penjualan.show', $sale)); ?>" class="btn btn-sm btn-primary">Detail</a> 
                 
-                @can('update', $sale) 
-                <a href="{{ route('penjualan.edit', $sale) }}" class="btn btn-sm btn-warning">Edit</a> 
-                @endcan 
+                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('update', $sale)): ?> 
+                <a href="<?php echo e(route('penjualan.edit', $sale)); ?>" class="btn btn-sm btn-warning">Edit</a> 
+                <?php endif; ?> 
                 
-                <form action="{{ route('penjualan.destroy', $sale) }}" method="POST" class="d-inline"> 
-                    @csrf 
-                    @method('DELETE') 
+                <form action="<?php echo e(route('penjualan.destroy', $sale)); ?>" method="POST" class="d-inline"> 
+                    <?php echo csrf_field(); ?> 
+                    <?php echo method_field('DELETE'); ?> 
                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah anda yakin akan menghapus penjualan ini?')"> Hapus </button> 
                 </form> 
             </td> 
         </tr> 
-        @empty 
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?> 
         <tr> 
             <td colspan="7" class="text-center text-muted py-4">Data Tidak Ditemukan</td> 
         </tr> 
-        @endforelse 
+        <?php endif; ?> 
     </tbody> 
 </table> 
 
-{{ $penjualan->links() }} 
-@endsection
+<?php echo e($penjualan->links()); ?> 
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\APK-POS2-1\resources\views/penjualan/index.blade.php ENDPATH**/ ?>

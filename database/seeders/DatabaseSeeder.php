@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 🔹 BENAR: Memanggil semua file seeder relasi bawaan proyek Anda
+        // Memanggil semua file seeder relasi utama
         $this->call([
             RoleSeeder::class,
             UserSeeder::class,
@@ -20,10 +20,14 @@ class DatabaseSeeder extends Seeder
             PenjualanSeeder::class,
         ]);
 
-        // 🔹 BENAR: Membuat satu user tambahan untuk uji coba login (typo 'excample' sudah diperbaiki)
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Menggunakan firstOrCreate agar tidak error saat db:seed dijalankan berulang kali
+        User::firstOrCreate(
+            ['email' => 'test@example.com'], // Cek apakah email ini sudah ada
+            [
+                'name' => 'Test User',
+                'password' => bcrypt('password'), // Atur password default untuk login
+                'role_id' => 4, // Menyesuaikan dengan role_id yang ada di log error Anda
+            ]
+        );
     }
 }
