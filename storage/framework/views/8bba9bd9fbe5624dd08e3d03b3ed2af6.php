@@ -4,13 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - POS System</title>
-    <!-- Tetap memakai Bootstrap bawaan Anda agar desain kartu tidak berubah -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #f8f9fa;
             height: 100vh;
             margin: 0;
+        }
+
+        .card {
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            border-bottom: 3px solid #89D7B7;
+            color: #1f2d27;
+        }
+
+        .form-control:focus {
+            border-color: #89D7B7;
+            box-shadow: 0 0 0 0.2rem rgba(137, 215, 183, 0.35);
+        }
+
+        .btn-primary {
+            background-color: #89D7B7;
+            border-color: #89D7B7;
+            color: #1f2d27;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background-color: #6fc7a2;
+            border-color: #6fc7a2;
+            color: #1f2d27;
+        }
+
+        .btn-primary:active {
+            background-color: #5ab88f !important;
+            border-color: #5ab88f !important;
         }
     </style>
 </head>
@@ -59,5 +93,4 @@ unset($__errorArgs, $__bag); ?>
 </div>
 
 </body>
-</html>
-<?php /**PATH C:\laragon\www\APK-POS2\resources\views/login.blade.php ENDPATH**/ ?>
+</html><?php /**PATH C:\laragon\www\APK-POS2\resources\views/login.blade.php ENDPATH**/ ?>

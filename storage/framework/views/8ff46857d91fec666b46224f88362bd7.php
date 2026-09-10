@@ -11,10 +11,56 @@
 <style>
     .grid-2 { display: flex; gap: 20px; margin-bottom: 20px; }
     .grid-item { flex: 1; min-width: 0; }
-    .card-box { background: #fff; padding: 20px; border: 1px solid #dee2e6; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,.02); }
+
+    .card-box {
+        background: #fff;
+        padding: 20px;
+        border: 1px solid #dee2e6;
+        border-left: 4px solid #89D7B7;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,.02);
+        transition: box-shadow .2s ease;
+    }
+    .card-box:hover {
+        box-shadow: 0 4px 10px rgba(137, 215, 183, .25);
+    }
+
     .card-title-text { font-weight: 600; color: #6c757d; margin-bottom: 10px; font-size: 14px; }
     .card-value { margin: 0; color: #212529; font-size: 24px; font-weight: bold; }
-    h2 { font-size: 20px; font-weight: 600; margin-top: 25px; margin-bottom: 15px; color: #212529; }
+
+    h2 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-top: 25px;
+        margin-bottom: 15px;
+        color: #212529;
+        padding-left: 10px;
+        border-left: 5px solid #89D7B7;
+    }
+
+    .table thead th {
+        background-color: #eafaf3;
+        color: #1f2d27;
+        border-bottom: 2px solid #89D7B7;
+        font-weight: 600;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f2fbf7;
+    }
+
+    .pagination .page-link {
+        color: #1f2d27;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #89D7B7;
+        border-color: #89D7B7;
+        color: #1f2d27;
+    }
+    .pagination .page-link:hover {
+        background-color: #eafaf3;
+        border-color: #89D7B7;
+    }
 </style>
 
 <div>
@@ -155,5 +201,4 @@
 
 <!-- batas Akhir isi konten -->
 <?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\APK-POS2\resources\views/dashboard.blade.php ENDPATH**/ ?>

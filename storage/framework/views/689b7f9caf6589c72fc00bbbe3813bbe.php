@@ -4,6 +4,72 @@
 
 <?php $__env->startSection('content'); ?>
 
+<style>
+    h1 {
+        font-size: 20px;
+        font-weight: 600;
+        padding-left: 10px;
+        border-left: 5px solid #89D7B7;
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        background-color: #89D7B7;
+        border-color: #89D7B7;
+        color: #1f2d27;
+        font-weight: 600;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background-color: #6fc7a2;
+        border-color: #6fc7a2;
+        color: #1f2d27;
+    }
+    .btn-primary:active {
+        background-color: #5ab88f !important;
+        border-color: #5ab88f !important;
+    }
+
+    .form-control:focus {
+        border-color: #89D7B7;
+        box-shadow: 0 0 0 0.2rem rgba(137, 215, 183, 0.35);
+    }
+
+    .btn-outline-secondary {
+        border-color: #89D7B7;
+        color: #1f2d27;
+    }
+    .btn-outline-secondary:hover {
+        background-color: #89D7B7;
+        border-color: #89D7B7;
+        color: #1f2d27;
+    }
+
+    .table thead th {
+        background-color: #eafaf3;
+        color: #1f2d27;
+        border-bottom: 2px solid #89D7B7;
+        font-weight: 600;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f2fbf7;
+    }
+
+    .pagination .page-link {
+        color: #1f2d27;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #89D7B7;
+        border-color: #89D7B7;
+        color: #1f2d27;
+    }
+    .pagination .page-link:hover {
+        background-color: #eafaf3;
+        border-color: #89D7B7;
+    }
+</style>
+
 <h1>Halaman Users</h1>
 <a href="<?php echo e(route('admin.users.create')); ?>" class="btn btn-primary mb-3">Create</a>
 
@@ -61,5 +127,4 @@
 
 
 <?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\APK-POS2\resources\views/users/index.blade.php ENDPATH**/ ?>
