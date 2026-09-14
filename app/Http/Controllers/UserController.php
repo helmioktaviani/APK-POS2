@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller 
 { 
     /** 
-     * Display a listing of the resource. 
+     * Menampilkan daftar user dengan fitur pencarian.
      */ 
     public function index(Request $request) 
     { 
@@ -35,7 +35,7 @@ class UserController extends Controller
     } 
 
     /** 
-     * Show the form for creating a new resource. 
+     * Menampilkan form tambah user baru.
      */ 
     public function create() 
     { 
@@ -44,7 +44,7 @@ class UserController extends Controller
     } 
 
     /** 
-     * Store a newly created resource in storage. 
+     * Menyimpan data user baru ke database.
      */ 
     public function store(StoreRequest $request) 
     { 
@@ -57,48 +57,51 @@ class UserController extends Controller
     } 
 
     /** 
-     * Display the specified resource. 
+     * Menampilkan detail data user tertentu.
      */ 
     public function show(User $user) 
     { 
-        // Menggunakan Route Model Binding untuk mengambil data user otomatis
         return view('users.show', compact('user')); 
     } 
 
     /** 
-     * Show the form for editing the specified resource. 
+     * Menampilkan form edit data user.
      */ 
     public function edit(User $user) 
     { 
-        // Mengambil semua role untuk pilihan dropdown di form edit
         $roles = Role::all(); 
         return view('users.edit', compact('user', 'roles')); 
     } 
 
     /** 
-     * Update the specified resource in storage. 
+     * Memperbarui data user di database (BAGIAN ERROR IS_ACTIVE SUDAH DIHAPUS).
      */ 
     public function update(UpdateRequest $request, User $user) 
     { 
+        // 1. Ambil data yang lolos validasi
         $dataReq = $request->validated(); 
 
+        // 2. Petakan masukan form ke objek data user
         $user->name = $dataReq['name']; 
         $user->email = $dataReq['email']; 
         $user->role_id = $dataReq['role_id']; 
 
+        // 3. Jika kolom password baru diisi, lakukan enkripsi ulang
         if (!empty($dataReq['password'])) { 
             $user->password = Hash::make($dataReq['password']); 
         } 
 
+        // 4. Simpan perubahan ke database MySQL
         $user->save(); 
 
+        // 5. Dialihkan kembali ke halaman utama tabel manajemen user
         return redirect() 
-            ->route('admin.users.edit', $user) 
-            ->with('success', 'User updated'); 
+            ->route('admin.users') 
+            ->with('success', 'Data user berhasil diperbarui'); 
     } 
 
     /** 
-     * Remove the specified resource from storage. 
+     * Menghapus data user dari database.
      */ 
     public function destroy(User $user) 
     { 

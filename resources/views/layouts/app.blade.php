@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'POS System')</title>
+    {{-- Mengubah nama default di tab browser --}}
+    <title>@yield('title', 'Toko Kosmetik')</title>
 
     <!-- CSS GABUNGAN AMAN DENGAN PERBAIKAN PAGINATION MENYAMPING -->
     <style>
@@ -60,22 +61,30 @@
         <div class="container">
             <div class="navbar-wrapper">
                 <div class="navbar-left">
-                    <a class="navbar-brand" href="/dashboard">POS</a>
-                                       <ul class="navbar-nav">
+                    <a class="navbar-brand" href="/dashboard">TOKO KOSMETIK</a>
+                    
+                    <ul class="navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">Dashboard</a>
                         </li>
+                        
+                        <!-- PERBAIKAN: Hanya tampilkan menu Users jika role_id adalah 1 (Admin) -->
+                        @if(auth()->user()->role_id == 1)
                         <li class="nav-item">
                             <a class="nav-link {{ Request::is('admin/users*') ? 'active' : '' }}" href="{{ route('admin.users') }}">Users</a>
                         </li>
+                        @endif
+
                         <li class="nav-item">
                             <a class="nav-link {{ Request::is('produk*') ? 'active' : '' }}" href="{{ route('produk.index') }}">Produk</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ Request::is('penjualan*') ? 'active' : '' }}" href="{{ route('penjualan.index') }}">Penjualan</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::is('tentang-kami*') ? 'active' : '' }}" href="{{ route('tentang.kami') }}">Tentang Kami</a>
+                        </li>
                     </ul>
-
                 </div>
                 
                 <form action="{{ route('logout') }}" method="POST" style="margin: 0;">

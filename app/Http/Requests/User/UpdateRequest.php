@@ -8,43 +8,48 @@ use Illuminate\Validation\Rule;
 class UpdateRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Tentukan apakah user diizinkan untuk membuat request ini.
      */
     public function authorize(): bool
     {
-        return true;
+        return true; 
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * Dapatkan aturan validasi yang berlaku untuk request ini.
      */
     public function rules(): array
     {
+        // Menangkap objek user atau ID user dari rute URL secara aman
+        $user = $this->route('user');
+        $userId = is_object($user) ? $user->id : $user;
+
         return [
-            'name' => 'required|string|max:100',
-                    'email' => [
-            'required',
-            'email',
-            Rule::unique('users')=>ignore($this->user->id),
-        ],
-            'password' => 'nullable|min:8',
-            'role_id' => 'required',
-            'is_active' => 'boolean'
+            'name'      => 'required|string|max:100',
+            'email'     => [
+                'required',
+                'email',
+                // PENTING: Menggunakan tanda -> bukan => agar tidak memicu error global
+                Rule::unique('users')->ignore($userId),
+            ],
+            'password'  => 'nullable|min:8',
+            'role_id'   => 'required',
+            'is_active' => 'nullable'
         ];
     }
 
+    /**
+     * Kostumisasi pesan error jika validasi gagal.
+     */
     public function messages(): array
     {
         return [
-            'name.required'     => 'Nama Wajib diisi.',
-            'name.max'          => 'Maksimal panjang nama 100 karakter.',
+            'name.required'     => 'Nama wajib diisi.',
             'email.required'    => 'Email wajib diisi.',
             'email.email'       => 'Format email tidak valid.',
-            'password.required' => 'Password wajib diisi.',
-            'password.min'      => 'Password minimal :min karakter.',
-            'role_id.required'  => 'Role Wajib diisi.',
+            'email.unique'      => 'Email ini sudah digunakan oleh akun lain.',
+            'password.min'      => 'Password baru minimal harus 8 karakter.',
+            'role_id.required'  => 'Role wajib dipilih.',
         ];
     }
 }

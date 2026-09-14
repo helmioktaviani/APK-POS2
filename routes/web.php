@@ -20,8 +20,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Menggunakan prefix 'admin' dan nama 'admin.users' agar cocok dengan file Blade Anda
-    Route::prefix('admin')->name('admin.')->group(function () {
+    // Route untuk Halaman Tentang Kami
+    Route::get('/tentang-kami', function () {
+        return view('tentang-kami');
+    })->name('tentang.kami');
+
+    // PERBAIKAN: Menambahkan middleware('role:admin') agar KASIR TIDAK BISA MASUK ke menu Users
+    Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('users');
         Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
         Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
@@ -30,7 +35,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/users/destroy/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
 
-    // Route berdasarkan Role (Tetap berada di dalam middleware auth)
+    // Route berdasarkan Role (Admin dan Kasir sama-sama bisa akses)
     Route::middleware('role:admin,kasir')->group(function () {
         Route::resource('/produk', ProdukController::class);
         Route::resource('/penjualan', PenjualanController::class);

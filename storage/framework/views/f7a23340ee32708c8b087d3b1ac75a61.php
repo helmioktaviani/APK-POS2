@@ -72,9 +72,8 @@
 
 <h1>Halaman Produk</h1>
 
-<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('create', App\Models\Produk::class)): ?>
+
 <a href="<?php echo e(route('produk.create')); ?>" class="btn btn-primary mb-3">Create</a>
-<?php endif; ?>
 
 <form action="<?php echo e(route('produk.index')); ?>" method="GET" class="mb-3">
     <div class="input-group">
@@ -110,30 +109,32 @@
             <th scope="row"><?php echo e($produk->firstItem() + $loop->index); ?></th>
             <td><?php echo e($product->user->name ?? 'Tidak ada user'); ?></td>
             <td>
-                <?php if($product->foto): ?>
+                
+                <?php if($product->foto && \Illuminate\Support\Facades\Storage::disk('public')->exists($product->foto)): ?>
                     <img src="<?php echo e(asset('storage/'.$product->foto)); ?>" width="50" class="img-thumbnail">
                 <?php else: ?>
-                    <span class="text-muted">No Photo</span>
+                    
+                    <span class="badge bg-secondary">No Photo</span>
                 <?php endif; ?>
             </td>
             <td><?php echo e($product->nama); ?></td>
             <td>Rp <?php echo e(number_format($product->harga_beli)); ?></td>
             <td>Rp <?php echo e(number_format($product->harga_jual)); ?></td>
             <td><?php echo e($product->stok); ?></td>
-            <td class="d-flex gap-1">
-                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('update', $product)): ?>
-                <a href="<?php echo e(route('produk.edit', $product)); ?>" class="btn btn-sm btn-warning">Edit</a>
-                <?php endif; ?>
+            <td>
+                <div class="d-flex gap-1">
+                    
+                    <a href="<?php echo e(route('produk.edit', $product)); ?>" class="btn btn-sm btn-warning">Edit</a>
 
-                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('delete', $product)): ?>
-                <form action="<?php echo e(route('produk.destroy', $product)); ?>" method="POST" class="d-inline">
-                    <?php echo csrf_field(); ?>
-                    <?php echo method_field('DELETE'); ?>
-                    <button class="btn btn-sm btn-danger" onclick="return confirm('Apakah anda yakin akan menghapus produk ini?')">
-                        Hapus
-                    </button>
-                </form>
-                <?php endif; ?>
+                    
+                    <form action="<?php echo e(route('produk.destroy', $product)); ?>" method="POST" class="d-inline m-0">
+                        <?php echo csrf_field(); ?>
+                        <?php echo method_field('DELETE'); ?>
+                        <button class="btn btn-sm btn-danger" onclick="return confirm('Apakah anda yakin akan menghapus produk ini?')">
+                            Hapus
+                        </button>
+                    </form>
+                </div>
             </td>
         </tr>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
@@ -148,4 +149,5 @@
 
 
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\APK-POS2\resources\views/produk/index.blade.php ENDPATH**/ ?>

@@ -51,7 +51,7 @@
 <body>
 
 <div class="card text-center position-absolute top-50 start-50 translate-middle" style="width: 24rem; padding: 10px; box-shadow: 0 4px 6px rgba(0,0,0,.05);">
-    <h5 class="card-header py-3 bg-white fw-bold">Login POS</h5>
+    <h5 class="card-header py-3 bg-white fw-bold">POS KOSMETIK</h5>
 
     <div class="card-body">
         <form action="{{ route('auth') }}" method="POST">

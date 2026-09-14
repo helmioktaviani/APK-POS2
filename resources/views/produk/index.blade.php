@@ -72,9 +72,8 @@
 
 <h1>Halaman Produk</h1>
 
-@can('create', App\Models\Produk::class)
+{{-- PERBAIKAN: Fungsi @can dihapus agar tombol Create selalu muncul --}}
 <a href="{{ route('produk.create') }}" class="btn btn-primary mb-3">Create</a>
-@endcan
 
 <form action="{{ route('produk.index') }}" method="GET" class="mb-3">
     <div class="input-group">
@@ -110,30 +109,32 @@
             <th scope="row">{{ $produk->firstItem() + $loop->index }}</th>
             <td>{{ $product->user->name ?? 'Tidak ada user' }}</td>
             <td>
-                @if($product->foto)
+                {{-- PERBAIKAN: Mengecek apakah file foto benar-benar ada di storage fisik --}}
+                @if($product->foto && \Illuminate\Support\Facades\Storage::disk('public')->exists($product->foto))
                     <img src="{{ asset('storage/'.$product->foto) }}" width="50" class="img-thumbnail">
                 @else
-                    <span class="text-muted">No Photo</span>
+                    {{-- Ikon alternatif jika data gambar kosong atau rusak akibat seeder --}}
+                    <span class="badge bg-secondary">No Photo</span>
                 @endif
             </td>
             <td>{{ $product->nama }}</td>
             <td>Rp {{ number_format($product->harga_beli) }}</td>
             <td>Rp {{ number_format($product->harga_jual) }}</td>
             <td>{{ $product->stok }}</td>
-            <td class="d-flex gap-1">
-                @can('update', $product)
-                <a href="{{ route('produk.edit', $product) }}" class="btn btn-sm btn-warning">Edit</a>
-                @endcan
+            <td>
+                <div class="d-flex gap-1">
+                    {{-- PERBAIKAN: Fungsi @can dihapus agar tombol Edit selalu bisa diakses --}}
+                    <a href="{{ route('produk.edit', $product) }}" class="btn btn-sm btn-warning">Edit</a>
 
-                @can('delete', $product)
-                <form action="{{ route('produk.destroy', $product) }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-sm btn-danger" onclick="return confirm('Apakah anda yakin akan menghapus produk ini?')">
-                        Hapus
-                    </button>
-                </form>
-                @endcan
+                    {{-- PERBAIKAN: Fungsi @can dihapus agar tombol Hapus selalu bisa diakses --}}
+                    <form action="{{ route('produk.destroy', $product) }}" method="POST" class="d-inline m-0">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-sm btn-danger" onclick="return confirm('Apakah anda yakin akan menghapus produk ini?')">
+                            Hapus
+                        </button>
+                    </form>
+                </div>
             </td>
         </tr>
         @empty

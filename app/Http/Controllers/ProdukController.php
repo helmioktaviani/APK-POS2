@@ -13,10 +13,7 @@ class ProdukController extends Controller
      */
     public function index()
     {
-        // Mengambil data produk beserta relasi user yang membuatnya (di-paginate 10 data per halaman)
         $produk = Produk::with('user')->latest()->paginate(10);
-        
-        // Mengarahkan ke file view produk/index.blade.php
         return view('produk.index', compact('produk'));
     }
 
@@ -33,17 +30,25 @@ class ProdukController extends Controller
      */
     public function store(Request $request)
     {
+        // Validasi disesuaikan dengan atribut name="name", dll di Blade Anda
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'harga_beli' => 'required|numeric',
-            'harga_jual' => 'required|numeric',
-            'stok' => 'required|integer',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,jfif,webp|max:2048', // TAMBAH JFIF & WEBP
+            'name' => 'required|string|max:255',
+            'purchase_price' => 'required|numeric',
+            'selling_price' => 'required|numeric',
+            'stock' => 'required|integer',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,jfif,webp|max:2048',
         ]);
 
-        $data = $request->all();
-        $data['user_id'] = auth()->id(); // Otomatis mengisi user_id dari admin/kasir yang sedang login
+        // Pemetaan data input form ke kolom database
+        $data = [
+            'nama'       => $request->name,
+            'harga_beli' => $request->purchase_price,
+            'harga_jual' => $request->selling_price,
+            'stok'       => $request->stock,
+            'user_id'    => auth()->id(), 
+        ];
 
+        // Proses unggah foto ke storage
         if ($request->hasFile('foto')) {
             $data['foto'] = $request->file('foto')->store('produk', 'public');
         }
@@ -67,17 +72,22 @@ class ProdukController extends Controller
     public function update(Request $request, Produk $produk)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'harga_beli' => 'required|numeric',
-            'harga_jual' => 'required|numeric',
-            'stok' => 'required|integer',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,jfif,webp|max:2048', // TAMBAH JFIF & WEBP
+            'name' => 'required|string|max:255',
+            'purchase_price' => 'required|numeric',
+            'selling_price' => 'required|numeric',
+            'stock' => 'required|integer',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,jfif,webp|max:2048',
         ]);
 
-        $data = $request->all();
+        $data = [
+            'nama'       => $request->name,
+            'harga_beli' => $request->purchase_price,
+            'harga_jual' => $request->selling_price,
+            'stok'       => $request->stock,
+        ];
 
         if ($request->hasFile('foto')) {
-            // Hapus foto lama dari storage jika ada agar tidak merusak path baru
+            // Hapus foto lama dari storage jika ada
             if ($produk->foto && Storage::disk('public')->exists($produk->foto)) {
                 Storage::disk('public')->delete($produk->foto);
             }
@@ -94,7 +104,6 @@ class ProdukController extends Controller
      */
     public function destroy(Produk $produk)
     {
-        // Hapus foto dari storage saat produk dihapus
         if ($produk->foto && Storage::disk('public')->exists($produk->foto)) {
             Storage::disk('public')->delete($produk->foto);
         }
@@ -103,4 +112,4 @@ class ProdukController extends Controller
 
         return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
     }
-}
+} // Kurung kurawal penutup class yang sempat hilang wajib ada di sini
